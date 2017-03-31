@@ -45,6 +45,8 @@ class App extends Component {
     );
   }
 
+  onSavePerson = (person) => this.savePerson(person);
+
   render() {
     const { people } = this.state;
     return (
@@ -63,7 +65,9 @@ class App extends Component {
                 <Discover people={people} />
               } />
               <Route path="/person/:id" render={({match}) =>
-                <Person person={people.find(person => person.id === match.params.id)} />
+                <Person
+                  person={people.find(person => person.id === match.params.id)}
+                  onSave={this.onSavePerson} />
               } />
               <Redirect to="/all" />
             </Switch>
