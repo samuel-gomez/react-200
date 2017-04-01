@@ -13,14 +13,14 @@ class Person extends Component {
   onEdit = () => this.setState({editing: true});
   onCancel = () => this.setState({editing: false});
 
-  onSave = (person) => {
+  onSave = (patch) => {
+    const { person } = this.props;
     return (
-      this.props.onSave(person)
-      .then(() => {
-        this.setState({editing: false});
-        return true;
+      this.props.onSave(person.id, patch)
+      .then(success => {
+        success && this.setState({editing: false});
+        return success;
       })
-      .catch(() => false)
     );
   }
     

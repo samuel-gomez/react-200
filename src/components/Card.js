@@ -8,7 +8,7 @@ const Card = ({actions, children}) => (
     </div>
     { actions && actions.length &&
       <div className="card-action">
-        { actions }
+        {actions}
       </div>
     }
   </section>

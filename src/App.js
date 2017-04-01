@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import './App.css';
 
-import { fetchPeople, savePerson } from './service/people';
+import { fetchPeople, updatePerson, loadPerson } from './service/people';
 
 import Discover from './pages/Discover';
 import ListAll from './pages/ListAll';
@@ -10,6 +10,20 @@ import Person from './pages/Person';
 
 import AppBar from './components/AppBar';
 import Spinner from './components/Spinner';
+
+
+const replaceOrInsert = person => ({ people }) => {
+  const personIndex = people.findIndex(p => p.id === person.id);
+  if (personIndex >= 0) {
+    return {
+      people: [...people.slice(0, personIndex), person, ...people.slice(personIndex + 1)]
+    }
+  } else {
+    return {
+      people: [person, ...people]
+    }
+  }
+}
 
 
 class App extends Component {
@@ -27,25 +41,43 @@ class App extends Component {
   fetchPeople() {
     return (
       fetchPeople()
-      .then(people => this.setState({ people }))
+      .then(people => {
+        this.setState({ people });
+        return true;
+      })
       .catch(e => {
         console.error('could not fetch people :(', e);
+        return false;
       })
     );
   }
 
-  savePerson(person) {
+  updatePerson(id, patch) {
     return (
-      savePerson(person)
-      .then(() => this.fetchPeople())
+      updatePerson(id, patch)
+      .then(() => this.loadPerson(id))
       .catch(e => {
         console.error('could not save person :(', e);
-        throw e;
+        return false;
       })
     );
   }
 
-  onSavePerson = (person) => this.savePerson(person);
+  loadPerson(id) {
+    return (
+      loadPerson(id)
+      .then(person => {
+        this.setState(replaceOrInsert(person));
+        return true;
+      })
+      .catch(e => {
+        console.error('could not fetch people :(', e);
+        return false;
+      })
+    );  
+  }
+
+  onSave = (id, patch) => this.updatePerson(id, patch);
 
   render() {
     const { people } = this.state;
@@ -67,7 +99,7 @@ class App extends Component {
               <Route path="/person/:id" render={({match}) =>
                 <Person
                   person={people.find(person => person.id === match.params.id)}
-                  onSave={this.onSavePerson} />
+                  onSave={this.onSave} />
               } />
               <Redirect to="/all" />
             </Switch>

@@ -1,12 +1,17 @@
 export async function fetchPeople() {
-  const result = await fetch('api/people');
-  return await result.json();
+  const res = await fetch('api/people');
+  return await res.json();
 }
 
-export async function savePerson(person) {
-  const result = await fetch(`api/people/${person.id}`, {
-    method: 'PUT',
-    body: JSON.stringify(person),
+export async function loadPerson(id) {
+  const res = await fetch(`api/people/${id}`);
+  return await res.json();
+}
+
+export async function updatePerson(id, patch) {
+  const result = await fetch(`api/people/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(patch),
     headers: {
       'Content-Type': 'application/json'
     }
