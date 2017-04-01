@@ -1,17 +1,32 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 
-const Input = ({placeholder, ...props}) => (
+const Input = ({
+  id,
+  type,
+  label,
+  value,
+  onChange,
+  disabled,
+  isEmptyRequired,
+  hasError,
+  errorMessage
+}) => (
   <div className="input-field">
-    <input {...props} />
+    <input
+      id={id}
+      type={type}
+      value={value}
+      onChange={e => onChange(e.target.value)}
+      disabled={disabled}
+      className={isEmptyRequired || hasError ? 'invalid' : ''}
+      autoComplete="off"
+    />
     <label
-      htmlFor={props.id}
-      className={props.value ? 'active' : null}>{placeholder}</label>
+      htmlFor={id}
+      className={value ? 'active' : null}
+      data-error={errorMessage}
+    >{label}</label>
   </div>
 );
-
-Input.propTypes = {
-  id: PropTypes.string.isRequired,
-  placeholder: PropTypes.string.isRequired
-}
 
 export default Input;
