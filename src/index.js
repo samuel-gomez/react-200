@@ -2,6 +2,7 @@ import 'materialize-css';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Formsy from 'formsy-react';
 import { BrowserRouter } from 'react-router-dom';
 
 import { setupVirtualServer } from './setup';
@@ -20,3 +21,7 @@ const startApp = () => {
 setupVirtualServer()
 .then(startApp)
 .catch(console.error);
+
+Formsy.addValidationRule('isFrenchPhoneNumber', (_, value) => (
+  /^0[0-9]{9}$/.test(value)
+));
