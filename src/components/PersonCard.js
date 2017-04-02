@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import { Link } from 'react-router-dom';
+import { pure } from 'recompose';
 import Card from './Card';
 
 const PersonCard = ({
@@ -13,31 +14,29 @@ const PersonCard = ({
   manager,
   managerId,
   onEdit
-}) => {
-  console.info(`render ${firstname}`);
-  return (
-    <Card actions={ onEdit && [
-      <a href="#" onClick={onEdit} key="edit">edit</a>
-    ]}>
-      <Card.Avatar photoUrl={photo} altText={`photo of ${firstname}`} />
-      <Card.Title
-        mainTitle={<Link to={`/person/${id}`}>{firstname} {lastname}</Link>}
-        subTitle={entity}
-      />
-      <Card.Info icon="email">
-        <a href={`mailto:${email}`}>{email}</a>
+}) => (
+  <Card actions={ onEdit && [
+    <a href="#" onClick={onEdit} key="edit">edit</a>
+  ]}>
+    <Card.Avatar photoUrl={photo} altText={`photo of ${firstname}`} />
+    <Card.Title
+      mainTitle={<Link to={`/person/${id}`}>{firstname} {lastname}</Link>}
+      subTitle={entity}
+    />
+    <Card.Info icon="email">
+      <a href={`mailto:${email}`}>{email}</a>
+    </Card.Info>
+    <Card.Info icon="phone">
+      <a href={`tel:${phone}`}>{phone}</a>
+    </Card.Info>
+    { manager && managerId && (
+      <Card.Info icon="supervisor_account" desc="manager">
+        <Link to={`/person/${managerId}`}>{manager}</Link>
       </Card.Info>
-      <Card.Info icon="phone">
-        <a href={`tel:${phone}`}>{phone}</a>
-      </Card.Info>
-      { manager && managerId && (
-        <Card.Info icon="supervisor_account" desc="manager">
-          <Link to={`/person/${managerId}`}>{manager}</Link>
-        </Card.Info>
-      )}
-    </Card>  
-  );
-};
+    )}
+  </Card>  
+);
+
 
 PersonCard.propTypes = {
   id: PropTypes.string.isRequired,
@@ -52,4 +51,4 @@ PersonCard.propTypes = {
   onEdit: PropTypes.func
 }
 
-export default PersonCard;
+export default pure(PersonCard);

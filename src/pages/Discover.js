@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { pure } from 'recompose';
 import PersonCard from '../components/PersonCard';
 import Fab from '../components/Fab';
 
@@ -41,6 +42,7 @@ const Fabs = ({ playing, next, prev, play, pause }) => (
     <Fab kind="skip_next" onClick={next} />
   </div>
 );
+const PureFabs = pure(Fabs);
 
 // container
 
@@ -83,7 +85,7 @@ class Discover extends Component {
     return (
       <div className="Discover">
         <Cards person={people[current]} />
-        <Fabs
+        <PureFabs
           playing={playing}
           next={this.showNextPerson}
           prev={this.showPreviousPerson}
