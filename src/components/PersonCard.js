@@ -53,21 +53,3 @@ PersonCard.propTypes = {
 }
 
 export default PersonCard;
-
-
-// a very specific helper function
-
-function arePersonCardPropsEqual(currentProps, nextProps) {
-  return (
-    nextProps.id === currentProps.id &&
-    nextProps.firstname === currentProps.firstname &&
-    nextProps.lastname === currentProps.lastname &&
-    nextProps.photo === currentProps.photo &&
-    nextProps.entity === currentProps.entity &&
-    nextProps.email === currentProps.email &&
-    nextProps.phone === currentProps.phone &&
-    nextProps.manager === currentProps.manager &&
-    nextProps.managerId === currentProps.managerId &&
-    nextProps.onEdit === currentProps.onEdit
-  );
-}
