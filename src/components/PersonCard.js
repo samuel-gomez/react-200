@@ -1,4 +1,4 @@
-import React, {PropTypes} from 'react';
+import React, { PropTypes } from 'react';
 import { Link } from 'react-router-dom';
 import Card from './Card';
 
@@ -13,28 +13,31 @@ const PersonCard = ({
   manager,
   managerId,
   onEdit
-}) => (
-  <Card actions={ onEdit && [
-    <a href="#" onClick={onEdit} key="edit">edit</a>
-  ]}>
-    <Card.Avatar photoUrl={photo} altText={`photo of ${firstname}`} />
-    <Card.Title
-      mainTitle={<Link to={`/person/${id}`}>{firstname} {lastname}</Link>}
-      subTitle={entity}
-    />
-    <Card.Info icon="email">
-      <a href={`mailto:${email}`}>{email}</a>
-    </Card.Info>
-    <Card.Info icon="phone">
-      <a href={`tel:${phone}`}>{phone}</a>
-    </Card.Info>
-    { manager && managerId && (
-      <Card.Info icon="supervisor_account" desc="manager">
-        <Link to={`/person/${managerId}`}>{manager}</Link>
+}) => {
+  console.info(`render ${firstname}`);
+  return (
+    <Card actions={ onEdit && [
+      <a href="#" onClick={onEdit} key="edit">edit</a>
+    ]}>
+      <Card.Avatar photoUrl={photo} altText={`photo of ${firstname}`} />
+      <Card.Title
+        mainTitle={<Link to={`/person/${id}`}>{firstname} {lastname}</Link>}
+        subTitle={entity}
+      />
+      <Card.Info icon="email">
+        <a href={`mailto:${email}`}>{email}</a>
       </Card.Info>
-    )}
-  </Card>  
-);
+      <Card.Info icon="phone">
+        <a href={`tel:${phone}`}>{phone}</a>
+      </Card.Info>
+      { manager && managerId && (
+        <Card.Info icon="supervisor_account" desc="manager">
+          <Link to={`/person/${managerId}`}>{manager}</Link>
+        </Card.Info>
+      )}
+    </Card>  
+  );
+};
 
 PersonCard.propTypes = {
   id: PropTypes.string.isRequired,
@@ -50,3 +53,21 @@ PersonCard.propTypes = {
 }
 
 export default PersonCard;
+
+
+// a very specific helper function
+
+function arePersonCardPropsEqual(currentProps, nextProps) {
+  return (
+    nextProps.id === currentProps.id &&
+    nextProps.firstname === currentProps.firstname &&
+    nextProps.lastname === currentProps.lastname &&
+    nextProps.photo === currentProps.photo &&
+    nextProps.entity === currentProps.entity &&
+    nextProps.email === currentProps.email &&
+    nextProps.phone === currentProps.phone &&
+    nextProps.manager === currentProps.manager &&
+    nextProps.managerId === currentProps.managerId &&
+    nextProps.onEdit === currentProps.onEdit
+  );
+}
