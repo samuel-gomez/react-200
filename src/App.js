@@ -69,17 +69,9 @@ class App extends Component {
           { people === null
           ? <Spinner />
           : <Switch>
-              <Route path="/all" render={() =>
-                <ListAll people={people} />
-              } />
-              <Route path="/discover" render={() =>
-                <Discover people={people} />
-              } />
-              <Route path="/person/:id" render={({match}) =>
-                <Person
-                  person={people.find(person => person.id === match.params.id)}
-                  onSave={this.onSave} />
-              } />
+              <Route path="/all" component={ListAll} />
+              <Route path="/discover" component={Discover} />
+              <Route path="/person/:id" component={Person} />
               <Redirect to="/all" />
             </Switch>
           }

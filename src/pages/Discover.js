@@ -3,6 +3,8 @@ import { pure } from 'recompose';
 import PersonCard from '../components/PersonCard';
 import Fab from '../components/Fab';
 
+import { connect } from 'react-redux';
+
 // state management
 
 const succ = (current, min, max) => (current === max) ? min : current + 1;
@@ -97,4 +99,10 @@ class Discover extends Component {
   }
 }
 
-export default Discover;
+const mapStateToProps = (state) => ({
+  people: state.people
+});
+
+const connectDiscover = connect(mapStateToProps);
+
+export default connectDiscover(Discover);

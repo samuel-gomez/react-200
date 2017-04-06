@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PersonCard from '../components/PersonCard';
 import PersonForm from '../components/PersonForm';
+import { connect } from 'react-redux';
 
 class Person extends Component {
   constructor(props) {
@@ -40,4 +41,10 @@ class Person extends Component {
   }
 }
 
-export default Person;
+const mapStateToProps = ({people}, {match}) => ({
+  person: people.find(person => person.id === match.params.id)
+});
+
+const connectPerson = connect(mapStateToProps);
+
+export default connectPerson(Person);

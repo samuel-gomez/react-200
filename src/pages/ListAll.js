@@ -1,5 +1,6 @@
 import React from 'react';
 import { compose, withState, withHandlers } from 'recompose';
+import { connect } from 'react-redux';
 
 import PersonCard from '../components/PersonCard';
 import SearchInput from '../components/SearchInput';
@@ -42,7 +43,12 @@ const ListAll = ({
 
 // enhance
 
+const mapStateToProps = (state) => ({
+  people: state.people
+});
+
 const enhance = compose(
+  connect(mapStateToProps),
   withState('search', 'setSearch', ''),
   withHandlers({
     searchChanged: props => event => props.setSearch(event.target.value)
