@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import './App.css';
 
-import { fetchPeople, updatePerson, loadPerson } from './service/people';
+// import { fetchPeople, updatePerson, loadPerson } from './service/people';
+
+import { connect } from 'react-redux';
 
 import Discover from './pages/Discover';
 import ListAll from './pages/ListAll';
@@ -27,60 +29,37 @@ const replaceOrInsert = person => ({ people }) => {
 
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      people: null
-    };
-  }
-
-  componentDidMount() {
-    this.fetchPeople();
-  }
-
-  fetchPeople() {
-    return (
-      fetchPeople()
-      .then(people => {
-        this.setState({ people });
-        return true;
-      })
-      .catch(e => {
-        console.error('could not fetch people :(', e);
-        return false;
-      })
-    );
-  }
 
   updatePerson(id, patch) {
-    return (
-      updatePerson(id, patch)
-      .then(() => this.loadPerson(id))
-      .catch(e => {
-        console.error('could not save person :(', e);
-        return false;
-      })
-    );
+    return Promise.reject('now we use redux dude');
+    // return (
+    //   updatePerson(id, patch)
+    //   .then(() => this.loadPerson(id))
+    //   .catch(e => {
+    //     console.error('could not save person :(', e);
+    //     return false;
+    //   })
+    // );
   }
 
-  loadPerson(id) {
-    return (
-      loadPerson(id)
-      .then(person => {
-        this.setState(replaceOrInsert(person));
-        return true;
-      })
-      .catch(e => {
-        console.error('could not fetch people :(', e);
-        return false;
-      })
-    );  
-  }
+  // loadPerson(id) {
+  //   return (
+  //     loadPerson(id)
+  //     .then(person => {
+  //       this.setState(replaceOrInsert(person));
+  //       return true;
+  //     })
+  //     .catch(e => {
+  //       console.error('could not fetch people :(', e);
+  //       return false;
+  //     })
+  //   );  
+  // }
 
   onSave = (id, patch) => this.updatePerson(id, patch);
 
   render() {
-    const { people } = this.state;
+    const { people } = this.props;
     return (
       <div className="App">
         <header>
@@ -108,6 +87,12 @@ class App extends Component {
       </div>
     );
   }
-} 
+}
 
-export default App;
+const mapStateToProps = (state) => ({
+  people: state.people
+});
+
+const connectApp = connect(mapStateToProps);
+
+export default connectApp(App);
