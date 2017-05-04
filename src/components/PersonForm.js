@@ -21,11 +21,6 @@ class PersonForm extends Component {
     };
   }
 
-  onFirstnameChanged = v => this.setState(propertyChanged('firstname', v));
-  onLastnameChanged = v => this.setState(propertyChanged('lastname', v));
-  onEntityChanged = v => this.setState(propertyChanged('entity', v));
-  onEmailChanged = v => this.setState(propertyChanged('email', v));
-  onPhoneChanged = v => this.setState(propertyChanged('phone', v));
 
   onSave = () => {
     this.setState({ saving: true });
@@ -37,7 +32,9 @@ class PersonForm extends Component {
       }
     });
   }
-  
+
+  onPropertyChanged = ({ target }) => this.setState(propertyChanged(target.id, target.value));
+
   render() {
     const { onCancel } = this.props;
     const { person, saving, canSubmit } = this.state;
@@ -52,25 +49,25 @@ class PersonForm extends Component {
         />
         <Input id="firstname" type="text" label="first name"
           value={person.firstname}
-          onChange={this.onFirstnameChanged}
+          onChange={this.onPropertyChanged}
           disabled={saving}
           isEmptyRequired={!person.firstname}
         />
         <Input id="lastname" type="text" label="last name"
           value={person.lastname}
-          onChange={this.onLastnameChanged}
+          onChange={this.onPropertyChanged}
           disabled={saving}
           isEmptyRequired={!person.lastname}
         />
         <Input id="entity" type="text" label="entity"
           value={person.entity}
-          onChange={this.onEntityChanged}
+          onChange={this.onPropertyChanged}
           disabled={saving}
           isEmptyRequired={!person.entity}
         />
         <Input id="email" type="text" label="email"
           value={person.email}
-          onChange={this.onEmailChanged}
+          onChange={this.onPropertyChanged}
           disabled={saving}
           isEmptyRequired={!person.email}
           hasError={!isEmail(person.email)}
@@ -78,7 +75,7 @@ class PersonForm extends Component {
         />
         <Input id="phone" type="text" label="phone"
           value={person.phone}
-          onChange={this.onPhoneChanged}
+          onChange={this.onPropertyChanged}
           disabled={saving}
           isEmptyRequired={!person.phone}
         />

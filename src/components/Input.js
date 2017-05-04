@@ -16,7 +16,7 @@ const Input = ({
       id={id}
       type={type}
       value={value}
-      onChange={e => onChange(e.target.value)}
+      onChange={onChange}
       disabled={disabled}
       className={isEmptyRequired || hasError ? 'invalid' : ''}
       autoComplete="off"
