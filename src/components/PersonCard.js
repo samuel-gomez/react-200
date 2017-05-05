@@ -1,6 +1,7 @@
 import React from 'react';
 import * as PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { pure } from 'recompose';
 import Card from './Card';
 
 const PersonCard = ({
@@ -15,7 +16,6 @@ const PersonCard = ({
   managerId,
   onEdit
 }) => {
-  console.info(`render ${firstname}`);
   return (
     <Card actions={ onEdit && [
       <a href="#" onClick={onEdit} key="edit">edit</a>
@@ -53,22 +53,4 @@ PersonCard.propTypes = {
   onEdit: PropTypes.func
 }
 
-export default PersonCard;
-
-
-// a very specific helper function
-
-function arePersonCardPropsEqual(currentProps, nextProps) {
-  return (
-    nextProps.id === currentProps.id &&
-    nextProps.firstname === currentProps.firstname &&
-    nextProps.lastname === currentProps.lastname &&
-    nextProps.photo === currentProps.photo &&
-    nextProps.entity === currentProps.entity &&
-    nextProps.email === currentProps.email &&
-    nextProps.phone === currentProps.phone &&
-    nextProps.manager === currentProps.manager &&
-    nextProps.managerId === currentProps.managerId &&
-    nextProps.onEdit === currentProps.onEdit
-  );
-}
+export default pure(PersonCard);

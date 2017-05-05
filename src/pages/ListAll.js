@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { compose, withState, withHandlers } from 'recompose';
 import PersonCard from '../components/PersonCard';
 import SearchInput from '../components/SearchInput';
 
@@ -13,48 +14,32 @@ const filterPerson = search => person => {
   }
 };
 
-// state management
-
-const searchChanged = value => ({ search }) => ({
-  search: value || ''
-});
-
 // Component
 
-class ListAll extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      search: ''
-    };
-  }
+const ListAll = ({people, search, searchChanged}) => (
+  <div className="ListAll">
+    <div className="card-container">
+      { people
+        .filter(filterPerson(search))
+        .map(person => 
+          <PersonCard {...person} key={person.id} />
+        )
+      }
+    </div>
+    <div className="control-container">
+      <SearchInput id="search" label="search by name"
+        value={search}
+        onChange={searchChanged}
+      />
+    </div>
+  </div>
+);
 
-  searchChanged = event => {
-    this.setState(searchChanged(event.target.value));
-  }
-  
-  render() {
-    const { people } = this.props;
-    const { search } = this.state;
-    return (
-      <div className="ListAll">
-        <div className="card-container">
-          { people
-            .filter(filterPerson(search))
-            .map(person => 
-              <PersonCard {...person} key={person.id} />
-            )
-          }
-        </div>
-        <div className="control-container">
-          <SearchInput id="search" label="search by name"
-            value={search}
-            onChange={this.searchChanged}
-          />
-        </div>
-      </div>
-    );
-  }
-}
+const enhance = compose(
+  withState('search', 'setSearch', ''),
+  withHandlers({
+    searchChanged: props => event => props.setSearch(event.target.value)
+  })
+);
 
-export default ListAll;
+export default enhance(ListAll);
