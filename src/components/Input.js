@@ -1,32 +1,33 @@
 import React from 'react';
+import { HOC } from 'formsy-react';
 
 const Input = ({
-  id,
+  name,
   type,
   label,
-  value,
-  onChange,
-  disabled,
-  isEmptyRequired,
-  hasError,
-  errorMessage
+  getValue,
+  setValue,
+  isFormDisabled,
+  showRequired,
+  showError,
+  getErrorMessage
 }) => (
   <div className="input-field">
     <input
-      id={id}
+      id={name}
       type={type}
-      value={value}
-      onChange={onChange}
-      disabled={disabled}
-      className={isEmptyRequired || hasError ? 'invalid' : ''}
+      value={getValue()}
+      onChange={e => setValue(e.target.value)}
+      disabled={isFormDisabled()}
+      className={showRequired() || showError() ? 'invalid' : ''}
       autoComplete="off"
     />
     <label
-      htmlFor={id}
-      className={value ? 'active' : null}
-      data-error={errorMessage}
+      htmlFor={name}
+      className={getValue() ? 'active' : null}
+      data-error={getErrorMessage()}
     >{label}</label>
   </div>
 );
 
-export default Input;
+export default HOC(Input);
