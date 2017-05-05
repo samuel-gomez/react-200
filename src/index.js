@@ -2,18 +2,24 @@ import 'materialize-css';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
 import Formsy from 'formsy-react';
 import { BrowserRouter } from 'react-router-dom';
 
+import { configureStore } from './state/store';
 import { setupVirtualServer } from './setup';
 import App from './App';
 import './index.css';
 
+const store = configureStore();
+
 const startApp = () => {
   ReactDOM.render(
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>,
+    <Provider store={store}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>,
     document.getElementById('root')
   );
 };
