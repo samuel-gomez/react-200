@@ -10,7 +10,11 @@ class Person extends Component {
     }
   }
   
-  onEdit = () => this.setState({editing: true});
+  onEdit = (e) => {
+    e.preventDefault();
+    this.setState({editing: true});
+  }
+  
   onCancel = () => this.setState({editing: false});
 
   onSave = (patch) => {

@@ -16,6 +16,13 @@ const filterPerson = search => person => {
 
 // Component
 
+const enhance = compose(
+  withState('search', 'setSearch', ''),
+  withHandlers({
+    searchChanged: props => event => props.setSearch(event.target.value)
+  })
+);
+
 const ListAll = ({people, search, searchChanged}) => (
   <div className="ListAll">
     <div className="card-container">
@@ -33,13 +40,6 @@ const ListAll = ({people, search, searchChanged}) => (
       />
     </div>
   </div>
-);
-
-const enhance = compose(
-  withState('search', 'setSearch', ''),
-  withHandlers({
-    searchChanged: props => event => props.setSearch(event.target.value)
-  })
 );
 
 export default enhance(ListAll);

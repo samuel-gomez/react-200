@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Form }  from 'formsy-react';
+import { Prompt } from 'react-router-dom';
 import Card from './Card';
 import Input from './Input';
 
@@ -9,6 +10,7 @@ class PersonForm extends Component {
     this.state = {
       saving: false,
       canSubmit: undefined,
+      dirty: false,
       personName: `${props.person.firstname} ${props.person.lastname}`
     };
   }
@@ -28,11 +30,14 @@ class PersonForm extends Component {
 
   onFormValid = () => this.setState({ canSubmit: true });
   onFormInvalid = () => this.setState({ canSubmit: false });
-  onChange  = (model) => this.setState({ personName: `${model.firstname} ${model.lastname}` })
+  onChange  = (model, isDirty) => this.setState({
+    personName: `${model.firstname} ${model.lastname}`,
+    dirty: isDirty
+  });
   
   render() {
     const { onCancel, person } = this.props;
-    const { saving, canSubmit, personName } = this.state;
+    const { saving, canSubmit, dirty, personName } = this.state;
     
     return (
       <Form
@@ -43,7 +48,7 @@ class PersonForm extends Component {
         onChange={this.onChange}
       >
         <Card actions={[
-          <button type="submit" className="btn btn-default" key="save" disabled={saving || !canSubmit}>save</button>,
+          <button type="submit" className="btn btn-default" key="save" disabled={!dirty || saving || !canSubmit}>save</button>,
           <a onClick={onCancel} key="cancel">cancel</a>
         ]}>
           <Card.Title
@@ -57,6 +62,12 @@ class PersonForm extends Component {
           <Input name="phone" label="phone" type="text" value={person.phone}
                  validations="isFrenchPhoneNumber" validationError="please enter a valid french phone number" required />
         </Card>
+        <Prompt
+          when={dirty}
+          message={location => (
+            `Are you sure you want to go to ${location.pathname}`
+          )}
+        />
       </Form>
     );
   }
