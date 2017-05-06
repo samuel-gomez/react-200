@@ -8,6 +8,7 @@ import { BrowserRouter } from 'react-router-dom';
 
 import { configureStore } from './state/store';
 import { setupVirtualServer } from './setup';
+import { fetchPeople } from './service/peopleBackend';
 import App from './App';
 import './index.css';
 
@@ -22,6 +23,8 @@ const startApp = () => {
     </Provider>,
     document.getElementById('root')
   );
+
+  fetchPeople(store.dispatch)();
 };
 
 setupVirtualServer()
