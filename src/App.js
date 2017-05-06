@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { Switch, Route, Redirect } from 'react-router-dom';
+import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { compose } from 'recompose';
 import './App.css';
 
 import { fetchPeople, updatePerson, loadPerson } from './service/people';
@@ -12,82 +14,53 @@ import AppBar from './components/AppBar';
 import Spinner from './components/Spinner';
 
 
-const replaceOrInsert = person => ({ people }) => {
-  const personIndex = people.findIndex(p => p.id === person.id);
-  if (personIndex >= 0) {
-    return {
-      people: [...people.slice(0, personIndex), person, ...people.slice(personIndex + 1)]
-    }
-  } else {
-    return {
-      people: [person, ...people]
-    }
-  }
-}
+const mapStateToProps = state => ({
+  people: state.people
+});
 
-
-class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      people: null
-    };
-  }
-
-  componentDidMount() {
-    this.fetchPeople();
-  }
-
-  fetchPeople() {
-    return (
-      fetchPeople()
+const mapDispatchToProps = dispatch => ({
+  fetchPeople: () => (
+    fetchPeople()
       .then(people => {
-        this.setState({ people });
-        return true;
+        dispatch({ type: 'PEOPLE_RECEIVED', people });
       })
       .catch(e => {
         console.error('could not fetch people :(', e);
-        return false;
       })
-    );
-  }
-
-  updatePerson(id, patch) {
-    return (
-      updatePerson(id, patch)
-      .then(() => this.loadPerson(id))
+  ),
+  updatePerson: (id, patch) => (
+    updatePerson(id, patch)
+      .then(() => loadPerson(id))
+      .then(person => {
+        dispatch({ type: 'PERSON_RECEIVED', person });
+        return true;
+      })
       .catch(e => {
         console.error('could not save person :(', e);
         return false;
       })
-    );
-  }
+  )
+});
 
-  loadPerson(id) {
-    return (
-      loadPerson(id)
-      .then(person => {
-        this.setState(replaceOrInsert(person));
-        return true;
-      })
-      .catch(e => {
-        console.error('could not fetch people :(', e);
-        return false;
-      })
-    );  
-  }
+const enhance = compose(
+  withRouter,
+  connect(mapStateToProps, mapDispatchToProps)
+);
 
-  onSave = (id, patch) => this.updatePerson(id, patch);
+class App extends Component {
+  componentDidMount() {
+    this.props.fetchPeople();
+  }
 
   render() {
-    const { people } = this.state;
+    const { people, updatePerson } = this.props;
     return (
       <div className="App">
         <header>
           <AppBar />
         </header>
         <main>
-          { people === null
+          { people.length === 0
           ? <Spinner />
           : <Switch>
               <Route path="/all" render={() =>
@@ -99,7 +72,7 @@ class App extends Component {
               <Route path="/person/:id" render={({match}) =>
                 <Person
                   person={people.find(person => person.id === match.params.id)}
-                  onSave={this.onSave} />
+                  onSave={updatePerson} />
               } />
               <Redirect to="/all" />
             </Switch>
@@ -110,4 +83,4 @@ class App extends Component {
   }
 } 
 
-export default App;
+export default enhance(App);
