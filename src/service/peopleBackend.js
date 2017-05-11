@@ -1,14 +1,15 @@
-const fetchPeople = dispatch => async () => {
+export const loadPeople = fetch => dispatch => async () => {
   try {
     const res = await fetch('api/people');
     const people = await res.json();
     dispatch({ type: 'PEOPLE_RECEIVED', people });
-  } catch (e) {
-    console.error('could not fetch people :(', e);
+    return null;
+  } catch (err) {
+    return err;
   }
 }
 
-const updatePerson = dispatch => async (id, patch) => {
+export const updatePerson = fetch => dispatch => async (id, patch) => {
   try {
     const patchRes = await fetch(`api/people/${id}`, {
       method: 'PATCH',
@@ -21,11 +22,13 @@ const updatePerson = dispatch => async (id, patch) => {
     const loadRes = await fetch(`api/people/${id}`);
     const person = await loadRes.json();
     dispatch({ type: 'PERSON_RECEIVED', person });
-    return true;
-  } catch (e) {
-    console.error('could not save person :(', e);
-    return false;
+    return null;
+  } catch (err) {
+    return err;
   }
 }
 
-export { fetchPeople, updatePerson };
+export default {
+  loadPeople: loadPeople(fetch),
+  updatePerson: updatePerson(fetch)
+};

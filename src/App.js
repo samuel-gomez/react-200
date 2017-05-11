@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import './App.css';
 
-import { updatePerson } from './service/peopleBackend';
+import api from './service/peopleBackend';
 
 import Discover from './pages/Discover';
 import ListAll from './pages/ListAll';
@@ -19,7 +19,14 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  updatePerson: updatePerson(dispatch)
+  updatePerson: (id, patch) => api.updatePerson(dispatch)(id, patch)
+    .then(err => {
+      if (err !== null) {
+        console.error('could not save person :(', err);
+        return false;
+      }
+      return true;
+    })
 });
 
 const enhance = compose(
