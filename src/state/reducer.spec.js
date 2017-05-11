@@ -1,5 +1,5 @@
 import { freeze } from '../util/freeze'
-import reducer from './reducer';
+import { people, search, discover } from './reducer';
 import {
   peopleReceived,
   personReceived,
@@ -8,95 +8,66 @@ import {
   discoverPrev
 } from './actions';
 
-describe('reducer', () => {
+describe('peopleReducer', () => {
   const testPeople = freeze([
     { id: '1', firstname: 'John' },
     { id: '2', firstname: 'Jane' },
     { id: '3', firstname: 'Joe' }
   ]);
 
-  const emptyState = freeze({
-    people: [],
-    search: '',
-    discover: 0
-  });
-
-  const populatedState = freeze({
-    people: testPeople,
-    search: '',
-    discover: 0
-  });
-  
   it('should initialize state with people set to an empty array', () => {
-    const actualState = reducer(undefined, {});
-    expect(actualState.people).toEqual(emptyState.people);
-  });
-
-  it('should initialize state with search set to an empty string', () => {
-    const actualState = reducer(undefined, {});
-    expect(actualState.search).toEqual(emptyState.search);
-  });
-
-  it('should initialize state with discover set to 0', () => {
-    const actualState = reducer(undefined, {});
-    expect(actualState.discover).toEqual(emptyState.discover);
+    const actualState = people(undefined, {});
+    expect(actualState).toEqual([]);
   });
 
   it('should set people array on PEOPLE_RECEIVED', () => {
     const action = peopleReceived(testPeople);
-
-    const actualState = reducer(emptyState, action);
-    expect(actualState).toEqual(populatedState);
+    const actualState = people([], action);
+    expect(actualState).toEqual(testPeople);
   });
 
   it('should replace the received person on PERSON_RECEIVED if it already exists', () => {
     const action = personReceived({ id: '2', firstname: 'Jill' });
-    const actualState = reducer(populatedState, action);
-    
-    const {people: [first, , third]} = populatedState;
-    expect(actualState).toEqual({
-      ...populatedState,
-      people: [first, action.person, third]
-    });    
+    const actualState = people(testPeople, action);
+    const [first, , third] = testPeople;
+    expect(actualState).toEqual([first, action.person, third]);
   });
 
   it('should prepend the received person on PERSON_RECEIVED when it does not exist', () => {
     const action = personReceived({ id: '4', firstname: 'Jill' });
-    const actualState = reducer(populatedState, action);
-    
-    expect(actualState).toEqual({
-      ...populatedState,
-      people: [action.person].concat(testPeople)
-    });
+    const actualState = people(testPeople, action); 
+    expect(actualState).toEqual([action.person].concat(testPeople));
+  });
+});
+
+describe('searchReducer', () => {
+  it('should initialize state with search set to an empty string', () => {
+    const actualState = search(undefined, {});
+    expect(actualState).toEqual('');
   });
 
   it('should replace search with the string in SEARCH_CHANGED action', () => {
     const action = searchChanged('test');
-    const actualState = reducer(populatedState, action);
-    
-    expect(actualState).toEqual({
-      ...populatedState,
-      search: 'test'
-    })
+    const actualState = search('anything', action);
+    expect(actualState).toEqual('test');
+  });
+});
+
+describe('discoverReducer', () => {
+  it('should initialize state with discover set to 0', () => {
+    const actualState = discover(undefined, 0, {});
+    expect(actualState).toEqual(0);
   });
 
   it('should set discover to the next index on DISCOVER_NEXT', () => {
     const action = discoverNext();
-    const actualState = reducer(populatedState, action);
-
-    expect(actualState).toEqual({
-      ...populatedState,
-      discover: 1
-    });
+    const actualState = discover(0, 3, action);
+    expect(actualState).toEqual(1);
   });
 
   it('should set discover to the previous index on DISCOVER_PREV', () => {
     const action = discoverPrev();
-    const actualState = reducer(populatedState, action);
-
-    expect(actualState).toEqual({
-      ...populatedState,
-      discover: 2
-    });
+    const actualState = discover(0, 3, action);
+    expect(actualState).toEqual(2);
   });
 });
