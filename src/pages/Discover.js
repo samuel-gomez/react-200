@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { pure } from 'recompose';
 import PersonCard from '../components/PersonCard';
 import Fab from '../components/Fab';
@@ -96,4 +97,8 @@ class Discover extends Component {
   }
 }
 
-export default Discover;
+const mapStateToProps = state => ({
+  people: state.people
+});
+
+export default connect(mapStateToProps)(Discover);

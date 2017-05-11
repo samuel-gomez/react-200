@@ -1,6 +1,26 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+
+import api from '../service/peopleBackend';
 import PersonCard from '../components/PersonCard';
 import PersonForm from '../components/PersonForm';
+
+const mapStateToProps = ({people}, {match}) => ({
+  person: people.find(person => person.id === match.params.id)
+});
+
+const mapDispatchToProps = dispatch => ({
+  updatePerson: (id, patch) => api.updatePerson(dispatch)(id, patch)
+    .then(err => {
+      if (err !== null) {
+        console.error('could not save person :(', err);
+        return false;
+      }
+      return true;
+    })
+});
+
+const enhance = connect(mapStateToProps, mapDispatchToProps);
 
 class Person extends Component {
   constructor(props) {
@@ -20,7 +40,7 @@ class Person extends Component {
   onSave = (patch) => {
     const { person } = this.props;
     return (
-      this.props.onSave(person.id, patch)
+      this.props.updatePerson(person.id, patch)
       .then(success => {
         success && this.setState({editing: false});
         return success;
@@ -44,4 +64,4 @@ class Person extends Component {
   }
 }
 
-export default Person;
+export default enhance(Person);
