@@ -6,17 +6,6 @@ import Fab from '../components/Fab';
 
 // state management
 
-const succ = (current, min, max) => (current === max) ? min : current + 1;
-const pred = (current, min, max) => (current === min) ? max : current - 1;
-
-const showNext = ({ current }, { people }) => ({
-  current: succ(current, 0, people.length - 1)
-});
-
-const showPrev = ({ current }, { people }) => ({
-  current: pred(current, 0, people.length - 1)
-});
-
 const play = () => ({
   playing: true
 });
@@ -50,7 +39,6 @@ class Discover extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      current: 0,
       playing: false
     }
   }
@@ -59,18 +47,10 @@ class Discover extends Component {
     clearInterval(this.intervalId);
   }
 
-  showNextPerson = () => {
-    this.setState(showNext);
-  };
-  
-  showPreviousPerson = () => {
-    this.setState(showPrev);
-  };
-
   play = () => {
     clearInterval(this.intervalId);
-    this.intervalId = setInterval(this.showNextPerson, 2000);
-    this.setState(showNext);
+    this.intervalId = setInterval(this.props.showNext, 2000);
+    this.props.showNext();
     this.setState(play);
   };
 
@@ -80,15 +60,15 @@ class Discover extends Component {
   };
   
   render() {
-    const { people } = this.props;
-    const { current, playing } = this.state;
+    const { person, showNext, showPrev } = this.props;
+    const { playing } = this.state;
     return (
       <div className="Discover">
-        <Cards person={people[current]} />
+        <Cards person={person} />
         <Fabs
           playing={playing}
-          next={this.showNextPerson}
-          prev={this.showPreviousPerson}
+          next={showNext}
+          prev={showPrev}
           play={this.play}
           pause={this.pause}
         />
@@ -98,7 +78,12 @@ class Discover extends Component {
 }
 
 const mapStateToProps = state => ({
-  people: state.people
+  person: state.people[state.discover]
 });
 
-export default connect(mapStateToProps)(Discover);
+const mapDispatchToProps = dispatch => ({
+  showNext: () => dispatch({ type: 'DISCOVER_NEXT' }),
+  showPrev: () => dispatch({ type: 'DISCOVER_PREV' })
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Discover);

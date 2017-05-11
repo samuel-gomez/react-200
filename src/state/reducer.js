@@ -1,6 +1,7 @@
 const initialState = {
   people: [],
-  search: ''
+  search: '',
+  discover: 0
 };
 
 const replaceOrInsert = (person, people) => {
@@ -12,6 +13,9 @@ const replaceOrInsert = (person, people) => {
   }
 }
 
+const succ = (current, min, max) => (current === max) ? min : current + 1;
+const pred = (current, min, max) => (current === min) ? max : current - 1;
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case 'PEOPLE_RECEIVED':
@@ -20,6 +24,10 @@ const reducer = (state = initialState, action) => {
       return { ...state, people: replaceOrInsert(action.person, state.people) };
     case 'SEARCH_CHANGED':
       return { ...state, search: action.search };
+    case 'DISCOVER_NEXT':
+      return { ...state, discover: succ(state.discover, 0, state.people.length - 1) };
+    case 'DISCOVER_PREV':
+      return { ...state, discover: pred(state.discover, 0, state.people.length - 1) };
     default:
       return state;
   }

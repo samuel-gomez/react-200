@@ -10,12 +10,14 @@ describe('reducer', () => {
 
   const emptyState = freeze({
     people: [],
-    search: ''
+    search: '',
+    discover: 0
   });
 
   const populatedState = freeze({
     people: testPeople,
-    search: ''
+    search: '',
+    discover: 0
   });
   
   it('should initialize state with people set to an empty array', () => {
@@ -26,6 +28,11 @@ describe('reducer', () => {
   it('should initialize state with search set to an empty string', () => {
     const actualState = reducer(undefined, {});
     expect(actualState.search).toEqual(emptyState.search);
+  });
+
+  it('should initialize state with discover set to 0', () => {
+    const actualState = reducer(undefined, {});
+    expect(actualState.discover).toEqual(emptyState.discover);
   });
 
   it('should set people array on PEOPLE_RECEIVED', () => {
@@ -77,5 +84,30 @@ describe('reducer', () => {
       ...populatedState,
       search: 'test'
     })
-  })
+  });
+
+  it('should set discover to the next index on DISCOVER_NEXT', () => {
+    const action = {
+      type: 'DISCOVER_NEXT'
+    };
+
+    const actualState = reducer(populatedState, action);
+    expect(actualState).toEqual({
+      ...populatedState,
+      discover: 1
+    });
+  });
+
+  it('should set discover to the previous index on DISCOVER_PREV', () => {
+    const action = {
+      type: 'DISCOVER_PREV'
+    };
+
+    const actualState = reducer(populatedState, action);
+    expect(actualState).toEqual({
+      ...populatedState,
+      discover: 2
+    });
+  });
+  
 });
