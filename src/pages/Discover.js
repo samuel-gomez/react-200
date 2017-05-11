@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { pure } from 'recompose';
+
+import { discoverNext, discoverPrev } from '../state/actions';
 import PersonCard from '../components/PersonCard';
 import Fab from '../components/Fab';
 
@@ -82,8 +84,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  showNext: () => dispatch({ type: 'DISCOVER_NEXT' }),
-  showPrev: () => dispatch({ type: 'DISCOVER_PREV' })
+  showNext: () => dispatch(discoverNext()),
+  showPrev: () => dispatch(discoverPrev())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Discover);

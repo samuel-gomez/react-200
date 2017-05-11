@@ -1,4 +1,5 @@
 import { loadPeople, updatePerson } from './peopleBackend';
+import { peopleReceived, personReceived } from '../state/actions';
 
 const testPeople = [
   { id: '1', firstname: 'John' },
@@ -30,7 +31,7 @@ describe('people backend', () => {
 
     it('should dispatch a peopleReceived action and resolve to null', (done) => {
       load().then(res => {
-        expect(dispatchMock).toBeCalledWith({ type: 'PEOPLE_RECEIVED', people: testPeople });
+        expect(dispatchMock).toBeCalledWith(peopleReceived(testPeople));
         expect(res).toBeNull();
         done();
       });
@@ -76,10 +77,11 @@ describe('people backend', () => {
         });
     });
 
-    it('should dispatch personReceived action', () => {
+    it('should dispatch personReceived action', (done) => {
       update(testPerson.id, testPatch)
         .then(() => {
-          expect(dispatchMock).toBeCalledWith({ type: 'PERSON_RECEIVED', person: testPerson })
+          expect(dispatchMock).toBeCalledWith(personReceived(testPerson));
+          done();
         })
     });
 

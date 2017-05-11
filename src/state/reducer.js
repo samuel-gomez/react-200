@@ -1,3 +1,11 @@
+import {
+  PEOPLE_RECEIVED,
+  PERSON_RECEIVED,
+  SEARCH_CHANGED,
+  DISCOVER_NEXT,
+  DISCOVER_PREV
+} from './actions';
+
 const initialState = {
   people: [],
   search: '',
@@ -18,15 +26,15 @@ const pred = (current, min, max) => (current === min) ? max : current - 1;
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case 'PEOPLE_RECEIVED':
+    case PEOPLE_RECEIVED:
       return { ...state, people: action.people };
-    case 'PERSON_RECEIVED':
+    case PERSON_RECEIVED:
       return { ...state, people: replaceOrInsert(action.person, state.people) };
-    case 'SEARCH_CHANGED':
+    case SEARCH_CHANGED:
       return { ...state, search: action.search };
-    case 'DISCOVER_NEXT':
+    case DISCOVER_NEXT:
       return { ...state, discover: succ(state.discover, 0, state.people.length - 1) };
-    case 'DISCOVER_PREV':
+    case DISCOVER_PREV:
       return { ...state, discover: pred(state.discover, 0, state.people.length - 1) };
     default:
       return state;

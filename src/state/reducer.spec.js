@@ -1,5 +1,12 @@
 import { freeze } from '../util/freeze'
 import reducer from './reducer';
+import {
+  peopleReceived,
+  personReceived,
+  searchChanged,
+  discoverNext,
+  discoverPrev
+} from './actions';
 
 describe('reducer', () => {
   const testPeople = freeze([
@@ -36,21 +43,14 @@ describe('reducer', () => {
   });
 
   it('should set people array on PEOPLE_RECEIVED', () => {
-    const action = {
-      type: 'PEOPLE_RECEIVED',
-      people: testPeople
-    };
+    const action = peopleReceived(testPeople);
 
     const actualState = reducer(emptyState, action);
     expect(actualState).toEqual(populatedState);
   });
 
   it('should replace the received person on PERSON_RECEIVED if it already exists', () => {
-    const action = {
-      type: 'PERSON_RECEIVED',
-      person: { id: '2', firstname: 'Jill' }
-    };
-
+    const action = personReceived({ id: '2', firstname: 'Jill' });
     const actualState = reducer(populatedState, action);
     
     const {people: [first, , third]} = populatedState;
@@ -61,12 +61,9 @@ describe('reducer', () => {
   });
 
   it('should prepend the received person on PERSON_RECEIVED when it does not exist', () => {
-    const action = {
-      type: 'PERSON_RECEIVED',
-      person: { id: '4', firstname: 'Jill' }
-    };
-
+    const action = personReceived({ id: '4', firstname: 'Jill' });
     const actualState = reducer(populatedState, action);
+    
     expect(actualState).toEqual({
       ...populatedState,
       people: [action.person].concat(testPeople)
@@ -74,12 +71,9 @@ describe('reducer', () => {
   });
 
   it('should replace search with the string in SEARCH_CHANGED action', () => {
-    const action = {
-      type: 'SEARCH_CHANGED',
-      search: 'test'
-    };
-
+    const action = searchChanged('test');
     const actualState = reducer(populatedState, action);
+    
     expect(actualState).toEqual({
       ...populatedState,
       search: 'test'
@@ -87,11 +81,9 @@ describe('reducer', () => {
   });
 
   it('should set discover to the next index on DISCOVER_NEXT', () => {
-    const action = {
-      type: 'DISCOVER_NEXT'
-    };
-
+    const action = discoverNext();
     const actualState = reducer(populatedState, action);
+
     expect(actualState).toEqual({
       ...populatedState,
       discover: 1
@@ -99,15 +91,12 @@ describe('reducer', () => {
   });
 
   it('should set discover to the previous index on DISCOVER_PREV', () => {
-    const action = {
-      type: 'DISCOVER_PREV'
-    };
-
+    const action = discoverPrev();
     const actualState = reducer(populatedState, action);
+
     expect(actualState).toEqual({
       ...populatedState,
       discover: 2
     });
   });
-  
 });

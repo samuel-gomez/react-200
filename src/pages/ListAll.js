@@ -1,7 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
+
 import PersonCard from '../components/PersonCard';
 import SearchInput from '../components/SearchInput';
+import { searchChanged } from '../state/actions';
 
 // utils
 
@@ -22,7 +24,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  searchChanged: event => void dispatch({ type: 'SEARCH_CHANGED', search: event.target.value })
+  searchChanged: event => void dispatch(searchChanged(event.target.value))
 });
 
 const enhance = connect(mapStateToProps, mapDispatchToProps);
