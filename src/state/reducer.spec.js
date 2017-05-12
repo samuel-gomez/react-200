@@ -4,8 +4,8 @@ import {
   peopleReceived,
   personReceived,
   searchChanged,
-  discoverNext,
-  discoverPrev
+  discoverNextOf,
+  discoverPrevOf
 } from './actions';
 
 describe('peopleReducer', () => {
@@ -56,23 +56,18 @@ describe('searchReducer', () => {
 describe('discoverReducer', () => {
   it('should initialize state with discover set to [null, 0]', () => {
     const actualState = discover(undefined, {});
-    expect(actualState).toEqual([null, 0]);
-  });
-
-  it('should set discover to the first index when people are received and remember the length', () => {
-    const actualState = discover([null, 0], peopleReceived([{id:1}, {id:2}, {id:3}]));
-    expect(actualState).toEqual([0, 3]);
+    expect(actualState).toEqual(0);
   });
   
   it('should set discover to the next index on DISCOVER_NEXT', () => {
-    const action = discoverNext();
-    const actualState = discover([0, 3], action);
-    expect(actualState).toEqual([1, 3]);
+    const action = discoverNextOf(3);
+    const actualState = discover(0, action);
+    expect(actualState).toEqual(1);
   });
 
   it('should set discover to the previous index on DISCOVER_PREV', () => {
-    const action = discoverPrev();
-    const actualState = discover([0, 3], action);
-    expect(actualState).toEqual([2, 3]);
+    const action = discoverPrevOf(3);
+    const actualState = discover(0, action);
+    expect(actualState).toEqual(2);
   });
 });
