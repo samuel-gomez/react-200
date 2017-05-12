@@ -1,21 +1,13 @@
 import { combineReducers } from 'redux';
 
 import people from './people/reducer';
+import search from './search/reducer';
 import {
-  SEARCH_CHANGED,
   DISCOVER_NEXT,
   DISCOVER_PREV
 } from './actions';
 
 
-export const search = (state = '', action) => {
-  switch (action.type) {
-    case SEARCH_CHANGED:
-      return action.search;
-    default:
-      return state;
-  }
-}
 
 
 const succ = (current, min, max) => (current === max) ? min : current + 1;

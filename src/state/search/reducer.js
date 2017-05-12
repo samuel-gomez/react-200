@@ -1,0 +1,12 @@
+import { SEARCH_CHANGED } from '../actions';
+
+const reducer = (state = '', action) => {
+  switch (action.type) {
+    case SEARCH_CHANGED:
+      return action.search;
+    default:
+      return state;
+  }
+};
+
+export default reducer;
