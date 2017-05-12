@@ -5,7 +5,7 @@ import people from './people/reducer';
 import search from './search/reducer';
 import discover from './discover/reducer';
 
-const rootReducer = combineReducers({ people, search, discover });
+export const rootReducer = combineReducers({ people, search, discover });
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
