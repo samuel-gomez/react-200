@@ -1,32 +1,11 @@
 import { combineReducers } from 'redux';
 
+import people from './people/reducer';
 import {
-  PEOPLE_RECEIVED,
-  PERSON_RECEIVED,
   SEARCH_CHANGED,
   DISCOVER_NEXT,
   DISCOVER_PREV
 } from './actions';
-
-const replacePerson = (person, people) => {
-  const personIndex = people.findIndex(p => p.id === person.id);
-  if (personIndex >= 0) {
-    return [...people.slice(0, personIndex), person, ...people.slice(personIndex + 1)];
-  } else {
-    return people; // this must not happen
-  }
-}
-
-export const people = (state = [], action) => {
-  switch (action.type) {
-    case PEOPLE_RECEIVED:
-      return action.people;
-    case PERSON_RECEIVED:
-      return replacePerson(action.person, state);
-    default:
-      return state;
-  }
-}
 
 
 export const search = (state = '', action) => {
