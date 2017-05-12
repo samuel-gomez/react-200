@@ -33,10 +33,10 @@ describe('peopleReducer', () => {
     expect(actualState).toEqual([first, action.person, third]);
   });
 
-  it('should prepend the received person on PERSON_RECEIVED when it does not exist', () => {
+  it('should return the state if PERSON_RECEIVED does not exist', () => {
     const action = personReceived({ id: '4', firstname: 'Jill' });
     const actualState = people(testPeople, action); 
-    expect(actualState).toEqual([action.person].concat(testPeople));
+    expect(actualState).toBe(testPeople);
   });
 });
 
@@ -54,20 +54,25 @@ describe('searchReducer', () => {
 });
 
 describe('discoverReducer', () => {
-  it('should initialize state with discover set to 0', () => {
-    const actualState = discover(undefined, 0, {});
-    expect(actualState).toEqual(0);
+  it('should initialize state with discover set to [null, 0]', () => {
+    const actualState = discover(undefined, {});
+    expect(actualState).toEqual([null, 0]);
   });
 
+  it('should set discover to the first index when people are received and remember the length', () => {
+    const actualState = discover([null, 0], peopleReceived([{id:1}, {id:2}, {id:3}]));
+    expect(actualState).toEqual([0, 3]);
+  });
+  
   it('should set discover to the next index on DISCOVER_NEXT', () => {
     const action = discoverNext();
-    const actualState = discover(0, 3, action);
-    expect(actualState).toEqual(1);
+    const actualState = discover([0, 3], action);
+    expect(actualState).toEqual([1, 3]);
   });
 
   it('should set discover to the previous index on DISCOVER_PREV', () => {
     const action = discoverPrev();
-    const actualState = discover(0, 3, action);
-    expect(actualState).toEqual(2);
+    const actualState = discover([0, 3], action);
+    expect(actualState).toEqual([2, 3]);
   });
 });

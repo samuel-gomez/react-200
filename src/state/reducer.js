@@ -1,3 +1,5 @@
+import { combineReducers } from 'redux';
+
 import {
   PEOPLE_RECEIVED,
   PERSON_RECEIVED,
@@ -6,12 +8,12 @@ import {
   DISCOVER_PREV
 } from './actions';
 
-const replaceOrInsert = (person, people) => {
+const replacePerson = (person, people) => {
   const personIndex = people.findIndex(p => p.id === person.id);
   if (personIndex >= 0) {
     return [...people.slice(0, personIndex), person, ...people.slice(personIndex + 1)];
   } else {
-    return [person, ...people];
+    return people; // this must not happen
   }
 }
 
@@ -20,7 +22,7 @@ export const people = (state = [], action) => {
     case PEOPLE_RECEIVED:
       return action.people;
     case PERSON_RECEIVED:
-      return replaceOrInsert(action.person, state);
+      return replacePerson(action.person, state);
     default:
       return state;
   }
@@ -40,22 +42,23 @@ export const search = (state = '', action) => {
 const succ = (current, min, max) => (current === max) ? min : current + 1;
 const pred = (current, min, max) => (current === min) ? max : current - 1;
 
-export const discover = (state = 0, length, action) => {
+export const discover = (state = [null, 0], action) => {
+  const [cur, max] = state;
   switch (action.type) {
+    case PEOPLE_RECEIVED:
+      return [0, action.people.length];
     case DISCOVER_NEXT:
-      return succ(state, 0, length - 1);
+      return max ? [succ(cur, 0, max - 1), max] : state;
     case DISCOVER_PREV:
-      return pred(state, 0, length - 1);
+      return max ? [pred(cur, 0, max - 1), max] : state;
     default:
       return state;
   }
 };
 
 
-const reducer = (state = {}, action) => ({
-  people: people(state.people, action),
-  search: search(state.search, action),
-  discover: discover(state.discover, state.people && state.people.length, action)
-})
+const reducer = combineReducers({
+  people, search, discover
+});
 
 export default reducer;
