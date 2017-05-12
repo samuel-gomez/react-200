@@ -42,15 +42,12 @@ export const search = (state = '', action) => {
 const succ = (current, min, max) => (current === max) ? min : current + 1;
 const pred = (current, min, max) => (current === min) ? max : current - 1;
 
-export const discover = (state = [null, 0], action) => {
-  const [cur, max] = state;
+export const discover = (state = 0, action) => {
   switch (action.type) {
-    case PEOPLE_RECEIVED:
-      return [0, action.people.length];
     case DISCOVER_NEXT:
-      return max ? [succ(cur, 0, max - 1), max] : state;
+      return succ(state, 0, action.of - 1);
     case DISCOVER_PREV:
-      return max ? [pred(cur, 0, max - 1), max] : state;
+      return pred(state, 0, action.of - 1);
     default:
       return state;
   }

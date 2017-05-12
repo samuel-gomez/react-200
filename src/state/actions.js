@@ -25,10 +25,28 @@ export function searchChanged(search) {
   };
 }
 
+export function discoverNextOf(of) {
+  return {
+    type: DISCOVER_NEXT,
+    of
+  };
+}
+
 export function discoverNext() {
-  return { type: DISCOVER_NEXT };
+  return (dispatch, getState) => {
+    dispatch(discoverNextOf(getState().people.length));
+  };
+}
+
+export function discoverPrevOf(of) {
+  return {
+    type: DISCOVER_PREV,
+    of
+  };
 }
 
 export function discoverPrev() {
-  return { type: DISCOVER_PREV };
+  return (dispatch, getState) => {
+    dispatch(discoverPrevOf(getState().people.length));
+  };
 }
