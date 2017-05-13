@@ -32,5 +32,19 @@ export default combineReducers({
 
 // selectors
 
+const filterPerson = filter => person => {
+  if (!filter) {
+    return true;
+  } else {
+    const re = new RegExp(filter, 'i');
+    return re.test(person.firstname) || re.test(person.lastname);
+  }
+};
+
 export const getAllPersonIds = state => state.all;
 export const getPersonById = (state, id) => state.map[id];
+export const getFilteredPersonIds = (state, filter) => (
+  state.all.map(id => state.map[id])
+    .filter(filterPerson(filter))
+    .map(person => person.id)
+);

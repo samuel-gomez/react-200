@@ -4,24 +4,13 @@ import { connect } from 'react-redux';
 import PersonCard from '../components/PersonCard';
 import SearchInput from '../components/SearchInput';
 import { searchChanged } from '../state/actions';
-import { getAllPersonIds, getPersonById } from '../state/store';
-
-// utils
-
-const filterPerson = search => person => {
-  if (!search) {
-    return true;
-  } else {
-    const re = new RegExp(search, 'i');
-    return re.test(person.firstname) || re.test(person.lastname);
-  }
-};
+import { getFilteredPersonIds, getSearch } from '../state/store';
 
 // connect
 
 const mapStateToProps = state => ({
-  people: getAllPersonIds(state).map(id => getPersonById(state, id)),
-  search: state.search
+  filteredPersonIds: getFilteredPersonIds(state),
+  search: getSearch(state)
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -32,13 +21,12 @@ const enhance = connect(mapStateToProps, mapDispatchToProps);
 
 // Component
 
-const ListAll = ({people, search, searchChanged}) => (
+const ListAll = ({filteredPersonIds, search, searchChanged}) => (
   <div className="ListAll">
     <div className="card-container">
-      { people
-        .filter(filterPerson(search))
-        .map(person => 
-          <PersonCard id={person.id} key={person.id} />
+      { filteredPersonIds
+        .map(id => 
+          <PersonCard id={id} key={id} />
         )
       }
     </div>

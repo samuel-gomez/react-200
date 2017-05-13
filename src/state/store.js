@@ -18,4 +18,6 @@ export const configureStore = () => createStore(
 
 export const getAllPersonIds = state => fromPeople.getAllPersonIds(state.people);
 export const getPersonById = (state, id) => fromPeople.getPersonById(state.people, id);
-export const getCurrentPersonId = (state) => getAllPersonIds(state)[state.discover];
+export const getCurrentPersonId = state => getAllPersonIds(state)[state.discover];
+export const getSearch = state => state.search;
+export const getFilteredPersonIds = state => fromPeople.getFilteredPersonIds(state.people, state.search);
