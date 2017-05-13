@@ -1,23 +1,31 @@
+import { combineReducers } from 'redux';
 import { PEOPLE_RECEIVED, PERSON_RECEIVED } from '../actions';
 
-const replacePerson = (person, people) => {
-  const personIndex = people.findIndex(p => p.id === person.id);
-  if (personIndex >= 0) {
-    return [...people.slice(0, personIndex), person, ...people.slice(personIndex + 1)];
-  } else {
-    return people; // this must not happen
-  }
-}
+const buildMap = a => a.reduce((m, c) => { m[c.id] = c; return m }, {});
 
-const reducer = (state = [], action) => {
+export const mapReducer = (state = {}, action) => {
   switch (action.type) {
     case PEOPLE_RECEIVED:
-      return action.people;
+      return buildMap(action.people);
     case PERSON_RECEIVED:
-      return replacePerson(action.person, state);
+      return {...state, [action.person.id]: action.person};
     default:
       return state;
   }
-}
+};
 
-export default reducer;
+export const allReducer = (state = [], action) => {
+  switch (action.type) {
+    case PEOPLE_RECEIVED:
+      return action.people.map(person => person.id);
+    case PERSON_RECEIVED:
+      return state.includes(action.person.id) ? state : [action.person.id, ...state];
+    default:
+      return state;
+  }
+};
+
+export default combineReducers({
+  map: mapReducer,
+  all: allReducer
+});
