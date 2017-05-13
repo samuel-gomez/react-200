@@ -58,7 +58,7 @@ class Person extends Component {
         ? "not found :("
         : editing
         ? <PersonForm person={person} onCancel={this.onCancel} onSave={this.onSave} />
-        : <PersonCard {...person} onEdit={this.onEdit} />
+        : <PersonCard id={person.id} onEdit={this.onEdit} />
         }
       </div>
     );

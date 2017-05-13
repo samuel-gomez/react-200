@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { pure } from 'recompose';
 
 import { discoverNext, discoverPrev } from '../state/actions';
-import { getPersonById, getAllPersonIds } from '../state/store';
+import { getAllPersonIds } from '../state/store';
 import PersonCard from '../components/PersonCard';
 import Fab from '../components/Fab';
 
@@ -19,9 +19,9 @@ const pause = () => ({
 
 // subcomponents
 
-const Cards = ({ person }) => (
+const Cards = ({ personId }) => (
   <div className="card-container">
-    <PersonCard {...person} />
+    <PersonCard id={personId} />
   </div>  
 );
 
@@ -63,11 +63,11 @@ class Discover extends Component {
   };
   
   render() {
-    const { person, showNext, showPrev } = this.props;
+    const { personId, showNext, showPrev } = this.props;
     const { playing } = this.state;
     return (
       <div className="Discover">
-        <Cards person={person} />
+        <Cards personId={personId} />
         <Fabs
           playing={playing}
           next={showNext}
@@ -81,7 +81,7 @@ class Discover extends Component {
 }
 
 const mapStateToProps = state => ({
-  person: getPersonById(state, getAllPersonIds(state)[state.discover])
+  personId: getAllPersonIds(state)[state.discover]
 });
 
 const mapDispatchToProps = dispatch => ({

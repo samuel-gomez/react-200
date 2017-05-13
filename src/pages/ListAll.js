@@ -38,7 +38,7 @@ const ListAll = ({people, search, searchChanged}) => (
       { people
         .filter(filterPerson(search))
         .map(person => 
-          <PersonCard {...person} key={person.id} />
+          <PersonCard id={person.id} key={person.id} />
         )
       }
     </div>

@@ -1,19 +1,27 @@
 import React from 'react';
-import * as PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { pure } from 'recompose';
 import Card from './Card';
+import { getPersonById } from '../state/store';
+
+const mapStateToProps = (state, {id}) => ({
+  person: getPersonById(state, id)
+});
+
+const enhance = connect(mapStateToProps);
 
 const PersonCard = ({
-  id,
-  firstname,
-  lastname,
-  photo,
-  entity,
-  email,
-  phone,
-  manager,
-  managerId,
+  person: {
+    id,
+    firstname,
+    lastname,
+    photo,
+    entity,
+    email,
+    phone,
+    manager,
+    managerId
+  },
   onEdit
 }) => {
   return (
@@ -40,17 +48,4 @@ const PersonCard = ({
   );
 };
 
-PersonCard.propTypes = {
-  id: PropTypes.string.isRequired,
-  firstname: PropTypes.string.isRequired,
-  lastname: PropTypes.string.isRequired,
-  photo: PropTypes.string.isRequired,
-  entity: PropTypes.string.isRequired,
-  email: PropTypes.string.isRequired,
-  phone: PropTypes.string.isRequired,
-  manager: PropTypes.string,
-  managerId: PropTypes.string,
-  onEdit: PropTypes.func
-}
-
-export default pure(PersonCard);
+export default enhance(PersonCard);
