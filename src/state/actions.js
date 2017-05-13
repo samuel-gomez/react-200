@@ -34,7 +34,7 @@ export function discoverNextOf(of) {
 
 export function discoverNext() {
   return (dispatch, getState) => {
-    dispatch(discoverNextOf(getState().people.length));
+    dispatch(discoverNextOf(getState().people.all.length));
   };
 }
 
@@ -47,6 +47,6 @@ export function discoverPrevOf(of) {
 
 export function discoverPrev() {
   return (dispatch, getState) => {
-    dispatch(discoverPrevOf(getState().people.length));
+    dispatch(discoverPrevOf(getState().people.all.length));
   };
 }

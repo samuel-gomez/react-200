@@ -13,7 +13,7 @@ import Spinner from './components/Spinner';
 
 
 const mapStateToProps = state => ({
-  peopleLoaded: state.people.length > 0
+  peopleLoaded: state.people.all.length > 0
 });
 
 const enhance = compose(

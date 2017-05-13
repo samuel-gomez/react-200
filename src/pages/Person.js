@@ -6,7 +6,7 @@ import PersonCard from '../components/PersonCard';
 import PersonForm from '../components/PersonForm';
 
 const mapStateToProps = ({people}, {match}) => ({
-  person: people.find(person => person.id === match.params.id)
+  person: people.map[match.params.id]
 });
 
 const mapDispatchToProps = dispatch => ({

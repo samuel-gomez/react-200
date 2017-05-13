@@ -80,7 +80,7 @@ class Discover extends Component {
 }
 
 const mapStateToProps = state => ({
-  person: state.people[state.discover]
+  person: state.people.map[state.people.all[state.discover]]
 });
 
 const mapDispatchToProps = dispatch => ({
