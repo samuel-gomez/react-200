@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { pure } from 'recompose';
 
 import { discoverNext, discoverPrev } from '../state/actions';
+import { getPersonById, getAllPersonIds } from '../state/store';
 import PersonCard from '../components/PersonCard';
 import Fab from '../components/Fab';
 
@@ -80,7 +81,7 @@ class Discover extends Component {
 }
 
 const mapStateToProps = state => ({
-  person: state.people.map[state.people.all[state.discover]]
+  person: getPersonById(state, getAllPersonIds(state)[state.discover])
 });
 
 const mapDispatchToProps = dispatch => ({

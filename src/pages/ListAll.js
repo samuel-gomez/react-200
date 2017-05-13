@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import PersonCard from '../components/PersonCard';
 import SearchInput from '../components/SearchInput';
 import { searchChanged } from '../state/actions';
+import { getAllPersonIds, getPersonById } from '../state/store';
 
 // utils
 
@@ -19,7 +20,7 @@ const filterPerson = search => person => {
 // connect
 
 const mapStateToProps = state => ({
-  people: state.people.all.map(id => state.people.map[id]),
+  people: getAllPersonIds(state).map(id => getPersonById(state, id)),
   search: state.search
 });
 

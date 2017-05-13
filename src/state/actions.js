@@ -1,3 +1,5 @@
+import { getAllPersonIds } from './store';
+
 export const PEOPLE_RECEIVED = 'PEOPLE_RECEIVED';
 export const PERSON_RECEIVED = 'PERSON_RECEIVED';
 export const SEARCH_CHANGED = 'SEARCH_CHANGED';
@@ -34,7 +36,7 @@ export function discoverNextOf(of) {
 
 export function discoverNext() {
   return (dispatch, getState) => {
-    dispatch(discoverNextOf(getState().people.all.length));
+    dispatch(discoverNextOf(getAllPersonIds(getState()).length));
   };
 }
 
@@ -47,6 +49,6 @@ export function discoverPrevOf(of) {
 
 export function discoverPrev() {
   return (dispatch, getState) => {
-    dispatch(discoverPrevOf(getState().people.all.length));
+    dispatch(discoverPrevOf(getAllPersonIds(getState()).length));
   };
 }

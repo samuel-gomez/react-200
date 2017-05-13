@@ -4,9 +4,10 @@ import { connect } from 'react-redux';
 import api from '../service/peopleBackend';
 import PersonCard from '../components/PersonCard';
 import PersonForm from '../components/PersonForm';
+import { getPersonById } from '../state/store';
 
-const mapStateToProps = ({people}, {match}) => ({
-  person: people.map[match.params.id]
+const mapStateToProps = (state, {match}) => ({
+  person: getPersonById(state, match.params.id)
 });
 
 const mapDispatchToProps = dispatch => ({

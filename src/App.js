@@ -11,9 +11,10 @@ import Person from './pages/Person';
 import AppBar from './components/AppBar';
 import Spinner from './components/Spinner';
 
+import { getAllPersonIds } from './state/store';
 
 const mapStateToProps = state => ({
-  peopleLoaded: state.people.all.length > 0
+  peopleLoaded: getAllPersonIds(state).length > 0
 });
 
 const enhance = compose(

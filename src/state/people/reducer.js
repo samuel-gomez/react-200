@@ -29,3 +29,8 @@ export default combineReducers({
   map: mapReducer,
   all: allReducer
 });
+
+// selectors
+
+export const getAllPersonIds = state => state.all;
+export const getPersonById = (state, id) => state.map[id];
