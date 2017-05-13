@@ -1,8 +1,29 @@
 import React, { Component } from 'react';
 import { Form }  from 'formsy-react';
 import { Prompt } from 'react-router-dom';
+import { connect } from 'react-redux';
 import Card from './Card';
 import Input from './Input';
+import { getPersonById } from '../state/store';
+import api from '../service/peopleBackend';
+
+const mapStateToProps = (state, {id}) => ({
+  person: getPersonById(state, id)
+});
+
+const mapDispatchToProps = (dispatch, {id, onEnd}) => ({
+  updatePerson: (patch) => api.updatePerson(dispatch)(id, patch)
+    .then(err => {
+      if (err !== null) {
+        console.error('could not save person :(', err);
+        return false;
+      }
+      onEnd();
+      return true;
+    })
+});
+
+const enhance = connect(mapStateToProps, mapDispatchToProps);
 
 class PersonForm extends Component {
   constructor(props) {
@@ -18,7 +39,7 @@ class PersonForm extends Component {
   onSubmit = (model, resetModel) => {
     this.setState({ saving: true });
     
-    this.props.onSave(model)
+    this.props.updatePerson(model)
     .then(success => {
       if (!success) {
         alert('something went wrong :(');
@@ -36,7 +57,7 @@ class PersonForm extends Component {
   });
   
   render() {
-    const { onCancel, person } = this.props;
+    const { onEnd, person } = this.props;
     const { saving, canSubmit, dirty, personName } = this.state;
     
     return (
@@ -49,7 +70,7 @@ class PersonForm extends Component {
       >
         <Card actions={[
           <button type="submit" className="btn btn-default" key="save" disabled={!dirty || saving || !canSubmit}>save</button>,
-          <a onClick={onCancel} key="cancel">cancel</a>
+          <a onClick={onEnd} key="cancel">cancel</a>
         ]}>
           <Card.Title
             mainTitle={personName}
@@ -73,4 +94,4 @@ class PersonForm extends Component {
   }
 }
 
-export default PersonForm;
+export default enhance(PersonForm);

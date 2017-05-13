@@ -11,6 +11,7 @@ const mapStateToProps = (state, {id}) => ({
 const enhance = connect(mapStateToProps);
 
 const PersonCard = ({
+  id: personId,
   person: {
     id,
     firstname,
@@ -21,31 +22,35 @@ const PersonCard = ({
     phone,
     manager,
     managerId
-  },
+  } = {},
   onEdit
 }) => {
-  return (
-    <Card actions={ onEdit && [
-      <a href="#" onClick={onEdit} key="edit">edit</a>
-    ]}>
-      <Card.Avatar photoUrl={photo} altText={`photo of ${firstname}`} />
-      <Card.Title
-        mainTitle={<Link to={`/person/${id}`}>{firstname} {lastname}</Link>}
-        subTitle={entity}
-      />
-      <Card.Info icon="email">
-        <a href={`mailto:${email}`}>{email}</a>
-      </Card.Info>
-      <Card.Info icon="phone">
-        <a href={`tel:${phone}`}>{phone}</a>
-      </Card.Info>
-      { manager && managerId && (
-        <Card.Info icon="supervisor_account" desc="manager">
-          <Link to={`/person/${managerId}`}>{manager}</Link>
+  return id !== undefined
+    ? <Card actions={ onEdit && [
+        <a href="#" onClick={onEdit} key="edit">edit</a>
+      ]}>
+        <Card.Avatar photoUrl={photo} altText={`photo of ${firstname}`} />
+        <Card.Title
+          mainTitle={<Link to={`/person/${id}`}>{firstname} {lastname}</Link>}
+          subTitle={entity}
+        />
+        <Card.Info icon="email">
+          <a href={`mailto:${email}`}>{email}</a>
         </Card.Info>
-      )}
-    </Card>  
-  );
+        <Card.Info icon="phone">
+          <a href={`tel:${phone}`}>{phone}</a>
+        </Card.Info>
+        { manager && managerId && (
+          <Card.Info icon="supervisor_account" desc="manager">
+            <Link to={`/person/${managerId}`}>{manager}</Link>
+          </Card.Info>
+        )}
+      </Card>  
+    : <Card>
+        <Card.Info icon="warning">
+          person with id: {personId} does not exist
+        </Card.Info>
+      </Card>
 };
 
 export default enhance(PersonCard);

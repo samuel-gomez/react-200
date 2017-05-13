@@ -1,27 +1,7 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 
-import api from '../service/peopleBackend';
 import PersonCard from '../components/PersonCard';
 import PersonForm from '../components/PersonForm';
-import { getPersonById } from '../state/store';
-
-const mapStateToProps = (state, {match}) => ({
-  person: getPersonById(state, match.params.id)
-});
-
-const mapDispatchToProps = dispatch => ({
-  updatePerson: (id, patch) => api.updatePerson(dispatch)(id, patch)
-    .then(err => {
-      if (err !== null) {
-        console.error('could not save person :(', err);
-        return false;
-      }
-      return true;
-    })
-});
-
-const enhance = connect(mapStateToProps, mapDispatchToProps);
 
 class Person extends Component {
   constructor(props) {
@@ -31,38 +11,25 @@ class Person extends Component {
     }
   }
   
-  onEdit = (e) => {
+  beginEdit = (e) => {
     e.preventDefault();
     this.setState({editing: true});
   }
   
-  onCancel = () => this.setState({editing: false});
-
-  onSave = (patch) => {
-    const { person } = this.props;
-    return (
-      this.props.updatePerson(person.id, patch)
-      .then(success => {
-        success && this.setState({editing: false});
-        return success;
-      })
-    );
-  }
+  endEdit = () => this.setState({editing: false});
     
   render() {
-    const { person } = this.props;
+    const { id } = this.props.match.params;
     const { editing } = this.state;
     return (
       <div className="card-container">
-        { !person
-        ? "not found :("
-        : editing
-        ? <PersonForm person={person} onCancel={this.onCancel} onSave={this.onSave} />
-        : <PersonCard id={person.id} onEdit={this.onEdit} />
+        { editing
+        ? <PersonForm id={id} onEnd={this.endEdit} />
+        : <PersonCard id={id} onEdit={this.beginEdit} />
         }
       </div>
     );
   }
 }
 
-export default enhance(Person);
+export default Person;
