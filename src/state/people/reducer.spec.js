@@ -1,6 +1,6 @@
 import { freeze } from '../../util/freeze'
 import { peopleReceived, personReceived } from '../actions';
-import reducer from './reducer';
+import reducer, { mapReducer, allReducer } from './reducer';
 
 describe('peopleReducer', () => {
   const testPeople = freeze([
@@ -9,27 +9,48 @@ describe('peopleReducer', () => {
     { id: '3', firstname: 'Joe' }
   ]);
 
-  it('should initialize state with people set to an empty array', () => {
+  const peopleMap = freeze({
+    '1': { id: '1', firstname: 'John' },
+    '2': { id: '2', firstname: 'Jane' },
+    '3': { id: '3', firstname: 'Joe' }
+  });
+
+  it('should initialize state with an empty map and an empty list', () => {
     const actualState = reducer(undefined, {});
-    expect(actualState).toEqual([]);
+    expect(actualState).toEqual({
+      map: {},
+      all: []
+    });
   });
 
-  it('should set people array on PEOPLE_RECEIVED', () => {
-    const action = peopleReceived(testPeople);
-    const actualState = reducer([], action);
-    expect(actualState).toEqual(testPeople);
-  });
+  describe('mapReducer', () => {
+    it('should load people into map on PEOPLE_RECEIVED', () => {
+      const action = peopleReceived(testPeople);
+      const actualState = mapReducer({}, action);
+      expect(actualState).toEqual(peopleMap);
+    });
 
-  it('should replace the received person on PERSON_RECEIVED if it already exists', () => {
-    const action = personReceived({ id: '2', firstname: 'Jill' });
-    const actualState = reducer(testPeople, action);
-    const [first, , third] = testPeople;
-    expect(actualState).toEqual([first, action.person, third]);
+    it('should "upsert" the received person on PERSON_RECEIVED if it already exists', () => {
+      const action = personReceived({ id: '2', firstname: 'Jill' });
+      const actualState = mapReducer(peopleMap, action);
+      expect(actualState).toEqual({
+        ...peopleMap,
+        [action.person.id]: action.person
+      });
+    });
   });
+  
+  describe('allReducer', () => {
+    it('should set the array of person ids on PEOPLE_RECEIVED', () => {
+      const action = peopleReceived(testPeople);
+      const actualState = allReducer([], action);
+      expect(actualState).toEqual(['1', '2', '3']);
+    });
 
-  it('should return the state if PERSON_RECEIVED does not exist', () => {
-    const action = personReceived({ id: '4', firstname: 'Jill' });
-    const actualState = reducer(testPeople, action); 
-    expect(actualState).toBe(testPeople);
+    it('should prepend the received person id if not already in array', () => {
+      const action = personReceived({ id: '4', firstname: 'Jill' });
+      const actualState = allReducer(['1', '2', '3'], action);
+      expect(actualState).toEqual(['4', '1', '2', '3']);
+    })
   });
 });
