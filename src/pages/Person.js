@@ -11,11 +11,7 @@ class Person extends Component {
     }
   }
   
-  beginEdit = (e) => {
-    e.preventDefault();
-    this.setState({editing: true});
-  }
-  
+  beginEdit = () => this.setState({editing: true});
   endEdit = () => this.setState({editing: false});
     
   render() {

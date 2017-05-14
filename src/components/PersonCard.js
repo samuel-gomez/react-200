@@ -27,7 +27,7 @@ const PersonCard = ({
 }) => {
   return id !== undefined
     ? <Card actions={ onEdit && [
-        <a href="#" onClick={onEdit} key="edit">edit</a>
+        <a onClick={onEdit} key="edit">edit</a>
       ]}>
         <Card.Avatar photoUrl={photo} altText={`photo of ${firstname}`} />
         <Card.Title
