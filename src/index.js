@@ -7,8 +7,8 @@ import Formsy from 'formsy-react';
 import { BrowserRouter } from 'react-router-dom';
 
 import { configureStore } from './state/store';
+import { requestPeople } from './state/actions';
 import { setupVirtualServer } from './setup';
-import api from './service/peopleBackend';
 import App from './App';
 import './index.css';
 
@@ -24,12 +24,7 @@ const startApp = () => {
     document.getElementById('root')
   );
 
-  api.loadPeople(store.dispatch)()
-    .then(err => {
-      if (err !== null) {
-        console.error('could not fetch people :(', err);
-      }
-    });
+  store.dispatch(requestPeople());
 };
 
 setupVirtualServer()

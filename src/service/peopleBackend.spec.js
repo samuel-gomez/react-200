@@ -8,7 +8,7 @@ const testPeople = [
 const testPatch = { firstname: 'Jill' };
 const testPerson = { id: '1', firstname: 'Jill' };
 
-describe('people backend', () => {
+describe.only('people backend', () => {
 
   describe('loadPeople', () => {
     let load;
@@ -23,7 +23,7 @@ describe('people backend', () => {
     
     it('should GET people from API', () => {
       load();
-      expect(fetchMock).toBeCalledWith('api/people');
+      expect(fetchMock).toBeCalledWith('/api/people');
     });
 
     it('should resolve to people array', (done) => {
@@ -61,12 +61,12 @@ describe('people backend', () => {
     it('should POST patch to API and load the person', (done) => {
       update(testPerson.id, testPatch)
         .then(() => {
-          expect(fetchMock.mock.calls[0]).toEqual([`api/people/${testPerson.id}`, {
+          expect(fetchMock.mock.calls[0]).toEqual([`/api/people/${testPerson.id}`, {
             body: JSON.stringify(testPatch),
             headers: expect.any(Object),
             method: 'PATCH'
           }]);
-          expect(fetchMock.mock.calls[1]).toEqual([`api/people/${testPerson.id}`]);
+          expect(fetchMock.mock.calls[1]).toEqual([`/api/people/${testPerson.id}`]);
           done();
         });
     });

@@ -4,23 +4,17 @@ import { Prompt } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Card from './Card';
 import Input from './Input';
-import { getPersonById } from '../state/store';
-import api from '../service/peopleBackend';
+import { getPersonById, getEditingStatus } from '../state/store';
+import { updatePerson, personEditingCanceled } from '../state/actions';
 
 const mapStateToProps = (state, {id}) => ({
-  person: getPersonById(state, id)
+  person: getPersonById(state, id),
+  status: getEditingStatus(state, id),
 });
 
-const mapDispatchToProps = (dispatch, {id, onEnd}) => ({
-  updatePerson: (patch) => api.updatePerson(dispatch)(id, patch)
-    .then(err => {
-      if (err !== null) {
-        console.error('could not save person :(', err);
-        return false;
-      }
-      onEnd();
-      return true;
-    })
+const mapDispatchToProps = (dispatch, {id}) => ({
+  updatePerson: (patch) => dispatch(updatePerson(id, patch)),
+  cancelEdit: () => dispatch(personEditingCanceled(id))
 });
 
 const enhance = connect(mapStateToProps, mapDispatchToProps);
@@ -29,24 +23,19 @@ class PersonForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      saving: false,
       canSubmit: undefined,
       dirty: false,
       personName: `${props.person.firstname} ${props.person.lastname}`
     };
   }
 
-  onSubmit = (model, resetModel) => {
-    this.setState({ saving: true });
-    
+  onSubmit = (model, reset) => {
     this.props.updatePerson(model)
-    .then(success => {
-      if (!success) {
-        alert('something went wrong :(');
-        resetModel();
-        this.setState({ saving: false });
-      }
-    });
+      .then(success => {
+        if (!success) {
+          reset();
+        }
+      })
   }
 
   onFormValid = () => this.setState({ canSubmit: true });
@@ -57,8 +46,9 @@ class PersonForm extends Component {
   });
   
   render() {
-    const { onEnd, person } = this.props;
-    const { saving, canSubmit, dirty, personName } = this.state;
+    const { person, cancelEdit, status } = this.props;
+    const { canSubmit, dirty, personName } = this.state;
+    const saving = status === 'SAVING';
     
     return (
       <Form
@@ -70,7 +60,7 @@ class PersonForm extends Component {
       >
         <Card actions={[
           <button type="submit" className="btn btn-default" key="save" disabled={!dirty || saving || !canSubmit}>save</button>,
-          <a onClick={onEnd} key="cancel">cancel</a>
+          <a onClick={cancelEdit} key="cancel">cancel</a>
         ]}>
           <Card.Title
             mainTitle={personName}

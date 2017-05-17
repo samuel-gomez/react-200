@@ -3,12 +3,17 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Card from './Card';
 import { getPersonById } from '../state/store';
+import { personEditingStarted } from '../state/actions';
 
 const mapStateToProps = (state, {id}) => ({
   person: getPersonById(state, id)
 });
 
-const enhance = connect(mapStateToProps);
+const mapDispatchToProps = (dispatch, {id}) => ({
+  onEdit: () => dispatch(personEditingStarted(id))
+});
+
+const enhance = connect(mapStateToProps, mapDispatchToProps);
 
 const PersonCard = ({
   id: personId,
@@ -23,10 +28,11 @@ const PersonCard = ({
     manager,
     managerId
   } = {},
+  enableEdit,
   onEdit
 }) => {
   return id !== undefined
-    ? <Card actions={ onEdit && [
+    ? <Card actions={ enableEdit && [
         <a onClick={onEdit} key="edit">edit</a>
       ]}>
         <Card.Avatar photoUrl={photo} altText={`photo of ${firstname}`} />

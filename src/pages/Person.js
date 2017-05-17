@@ -1,31 +1,23 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { connect } from 'react-redux';
 
+import { getEditingStatus } from '../state/store';
 import PersonCard from '../components/PersonCard';
 import PersonForm from '../components/PersonForm';
 
-class Person extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      editing: false
-    }
-  }
-  
-  beginEdit = () => this.setState({editing: true});
-  endEdit = () => this.setState({editing: false});
-    
-  render() {
-    const { id } = this.props.match.params;
-    const { editing } = this.state;
-    return (
-      <div className="card-container">
-        { editing
-        ? <PersonForm id={id} onEnd={this.endEdit} />
-        : <PersonCard id={id} onEdit={this.beginEdit} />
-        }
-      </div>
-    );
-  }
-}
+const mapStateToProps = (state, {match:{params:{id}}}) => ({
+  isEditing: getEditingStatus(state, id) !== undefined
+});
 
-export default Person;
+const enhance = connect(mapStateToProps);
+
+const Person = ({isEditing, match:{params:{id}}}) => (
+  <div className="card-container">
+    { isEditing
+    ? <PersonForm id={id} />
+    : <PersonCard id={id} enableEdit />
+    }
+  </div>
+);
+
+export default enhance(Person);
