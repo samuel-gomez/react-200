@@ -1,5 +1,4 @@
 import { loadPeople, updatePerson } from './peopleBackend';
-import { peopleReceived, personReceived } from '../state/actions';
 
 const testPeople = [
   { id: '1', firstname: 'John' },
@@ -14,14 +13,12 @@ describe('people backend', () => {
   describe('loadPeople', () => {
     let load;
     let fetchMock;
-    let dispatchMock;
     
     beforeEach(() => {
       fetchMock = jest.fn().mockReturnValue(
         Promise.resolve({ json: () => Promise.resolve(testPeople) })
       );
-      dispatchMock = jest.fn();
-      load = loadPeople(fetchMock)(dispatchMock);
+      load = loadPeople(fetchMock);
     });
     
     it('should GET people from API', () => {
@@ -29,19 +26,18 @@ describe('people backend', () => {
       expect(fetchMock).toBeCalledWith('api/people');
     });
 
-    it('should dispatch a peopleReceived action and resolve to null', (done) => {
+    it('should resolve to people array', (done) => {
       load().then(res => {
-        expect(dispatchMock).toBeCalledWith(peopleReceived(testPeople));
-        expect(res).toBeNull();
+        expect(res).toEqual(testPeople);
         done();
       });
     });
 
-    it('should resolve to some Error when something goes wrong', (done) => {
+    it('should reject with some Error when something goes wrong', (done) => {
       fetchMock = jest.fn().mockReturnValue(Promise.reject('some error'));
-      load = loadPeople(fetchMock)(dispatchMock);
-      load().then(res => {
-        expect(res).toEqual('some error');
+      load = loadPeople(fetchMock);
+      load().catch(error => {
+        expect(error).toEqual('some error');
         done();
       })
     });
@@ -50,7 +46,6 @@ describe('people backend', () => {
   describe('updatePerson', () => {
     let update;
     let fetchMock;
-    let dispatchMock;
 
     beforeEach(() => {
       fetchMock = jest.fn()
@@ -60,8 +55,7 @@ describe('people backend', () => {
         .mockImplementationOnce(
           () => Promise.resolve({ json: () => Promise.resolve(testPerson) })
         )
-      dispatchMock = jest.fn();
-      update = updatePerson(fetchMock)(dispatchMock);
+      update = updatePerson(fetchMock);
     });
 
     it('should POST patch to API and load the person', (done) => {
@@ -77,19 +71,19 @@ describe('people backend', () => {
         });
     });
 
-    it('should dispatch personReceived action', (done) => {
+    it('should resolve with person received', (done) => {
       update(testPerson.id, testPatch)
-        .then(() => {
-          expect(dispatchMock).toBeCalledWith(personReceived(testPerson));
+        .then(person => {
+          expect(person).toEqual(testPerson);
           done();
         })
     });
 
-    it('should resolve to some Error when something goes wrong', (done) => {
+    it('should reject with some Error when something goes wrong', (done) => {
       fetchMock = jest.fn().mockReturnValue(Promise.reject('some error'));
-      update = updatePerson(fetchMock)(dispatchMock);
-      update().then(res => {
-        expect(res).toEqual('some error');
+      update = updatePerson(fetchMock);
+      update().catch(error => {
+        expect(error).toEqual('some error');
         done();
       })
     });    
