@@ -2,32 +2,57 @@ import React from 'react';
 import { HOC } from 'formsy-react';
 
 const Input = ({
-  name,
+  id,
   type,
   label,
-  getValue,
-  setValue,
-  isFormDisabled,
-  showRequired,
-  showError,
-  getErrorMessage
+  value,
+  onChange,
+  disabled,
+  isEmptyRequired,
+  hasError,
+  errorMessage
 }) => (
   <div className="input-field">
     <input
-      id={name}
+      id={id}
       type={type}
-      value={getValue()}
-      onChange={e => setValue(e.target.value)}
-      disabled={isFormDisabled()}
-      className={showRequired() || showError() ? 'invalid' : ''}
+      value={value}
+      onChange={onChange}
+      disabled={disabled}
+      className={isEmptyRequired || hasError ? 'invalid' : ''}
       autoComplete="off"
     />
     <label
-      htmlFor={name}
-      className={getValue() ? 'active' : null}
-      data-error={getErrorMessage()}
+      htmlFor={id}
+      className={value ? 'active' : null}
+      data-error={errorMessage}
     >{label}</label>
   </div>
 );
 
-export default HOC(Input);
+const adaptInput = (InputComponent) =>
+  ({
+    name,
+    type,
+    label,
+    getValue,
+    setValue,
+    isFormDisabled,
+    showRequired,
+    showError,
+    getErrorMessage
+  }) => (
+    <InputComponent
+      id={name}
+      type={type}
+      label={label}
+      value={getValue()}
+      onChange={e => setValue(e.target.value)}
+      disabled={isFormDisabled()}
+      isEmptyRequired={showRequired()}
+      hasError={showError()}
+      errorMessage={getErrorMessage()}
+    />
+  );
+
+export default HOC(adaptInput(Input));
