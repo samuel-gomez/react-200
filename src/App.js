@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import './App.css';
 
+import { getAllPeopleIds } from './state';
+
 import Discover from './pages/Discover';
 import ListAll from './pages/ListAll';
 import Person from './pages/Person';
@@ -13,7 +15,7 @@ import Spinner from './components/Spinner';
 
 
 const mapStateToProps = state => ({
-  peopleLoaded: state.people.length > 0
+  peopleLoaded: getAllPeopleIds(state).length > 0
 });
 
 const enhance = compose(

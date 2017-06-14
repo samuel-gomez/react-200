@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+import { getPersonById } from '../state';
+
 import api from '../service/peopleBackend';
 import PersonCard from '../components/PersonCard';
 import PersonForm from '../components/PersonForm';
 
-const mapStateToProps = ({people}, {match}) => ({
-  person: people.find(person => person.id === match.params.id)
+const mapStateToProps = (state, {match}) => ({
+  person: getPersonById(state, match.params.id)
 });
 
 const mapDispatchToProps = dispatch => ({
