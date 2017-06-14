@@ -1,5 +1,6 @@
 const initialState = {
-  people: []
+  people: [],
+  search: ''
 };
 
 const replaceOrInsert = (person, people) => {
@@ -14,9 +15,20 @@ const replaceOrInsert = (person, people) => {
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case 'PEOPLE_RECEIVED':
-      return { people: action.people };
+      return {
+        ...state,
+        people: action.people
+      };
     case 'PERSON_RECEIVED':
-      return { people: replaceOrInsert(action.person, state.people) };
+      return {
+        ...state,
+        people: replaceOrInsert(action.person, state.people)
+      };
+    case 'SEARCH_CHANGED':
+      return {
+        ...state,
+        search: action.search
+      }
     default:
       return state;
   }

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { pure } from 'recompose';
 import PersonCard from '../components/PersonCard';
 import Fab from '../components/Fab';
+import { connect } from 'react-redux';
 
 // state management
 
@@ -96,4 +97,8 @@ class Discover extends Component {
   }
 }
 
-export default Discover;
+const enhance = connect(state => ({
+  people: state.people
+}));
+
+export default enhance(Discover);
