@@ -15,7 +15,7 @@ const mapDispatchToProps = (dispatch, {id}) => ({
 
 const enhance = connect(mapStateToProps, mapDispatchToProps);
 
-const PersonCard = ({
+export const PersonCard = ({
   id: personId,
   person: {
     id,
